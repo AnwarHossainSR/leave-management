@@ -11,7 +11,6 @@ namespace leave_management.Data
     {
         [Key]
         public int Id { get; set; }
-
         [ForeignKey("RequestingEmployeeId")]
         public Employee RequestingEmployee { get; set; }
         public string RequestingEmployeeId { get; set; }

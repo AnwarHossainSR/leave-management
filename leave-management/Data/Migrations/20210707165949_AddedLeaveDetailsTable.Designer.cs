@@ -10,8 +10,8 @@ using leave_management.Data;
 namespace leave_management.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210707164454_AddedLeaveDetailsTables")]
-    partial class AddedLeaveDetailsTables
+    [Migration("20210707165949_AddedLeaveDetailsTable")]
+    partial class AddedLeaveDetailsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
