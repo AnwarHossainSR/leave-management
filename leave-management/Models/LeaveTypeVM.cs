@@ -12,6 +12,7 @@ namespace leave_management.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        [Required]
         [Display(Name="Date Created")]
         public DateTime DateCreated { get; set; }
     }
