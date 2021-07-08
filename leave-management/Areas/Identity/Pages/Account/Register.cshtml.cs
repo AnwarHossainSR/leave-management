@@ -86,11 +86,15 @@ namespace leave_management.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Employee { UserName = Input.FirstName + " "+ Input.LastName, Email = Input.Email, Firstname = Input.FirstName, Lastname = Input.LastName };
+                var user = new Employee { UserName = Input.Email, Email = Input.Email, Firstname = Input.FirstName, Lastname = Input.LastName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    _userManager.AddToRoleAsync(user, "Employee").Wait();
+
+                    _logger.LogInformation("Assign Employee role to the user.");
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
