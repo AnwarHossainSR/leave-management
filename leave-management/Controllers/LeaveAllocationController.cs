@@ -75,5 +75,56 @@ namespace leave_management.Controllers
             var model = _mapper.Map<List<EmployeeVM>>(employees);
             return View(model);
         }
+
+        // GET: LeaveAllocation/Details/5
+        public ActionResult Details(string id)
+        {
+            var employee = _mapper.Map<EmployeeVM>(_userManager.FindByIdAsync(id).Result);
+            var allocations = _mapper.Map<List<LeaveAllocationVM>>(_leaveallocationrepo.GetLeaveAllocationsByEmployee(id));
+            var model = new ViewAllocationsVM
+            {
+                Employee = employee,
+                LeaveAllocations = allocations
+            };
+            return View(model);
+        }
+
+
+        // GET: LeaveAllocation/Edit/5
+        public ActionResult Edit(int id)
+        {
+            var leaveallocation = _leaveallocationrepo.FindById(id);
+            var model = _mapper.Map<EditLeaveAllocationVM>(leaveallocation);
+            return View(model);
+        }
+
+        // POST: LeaveAllocation/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(EditLeaveAllocationVM model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var leaveallocation = _leaveallocationrepo.FindById(model.Id);
+                    var result = _mapper.Map<EditLeaveAllocationVM>(leaveallocation);
+                    return View(result);
+                }
+                var record = _leaveallocationrepo.FindById(model.Id);
+                record.NumberOfDays = model.NumberOfDays;
+                var isSuccess = _leaveallocationrepo.Update(record);
+                if (!isSuccess)
+                {
+                    ModelState.AddModelError("", "Error while saving");
+                    return View(model);
+                }
+                return RedirectToAction(nameof(Details), new { id = model.EmployeeId });
+            }
+            catch
+            {
+                return View(model);
+            }
+        }
     }
 }
